@@ -1,0 +1,254 @@
+/* ProfessorDashboard.css */
+
+.dashboard-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #f0f8ff, #f5f5f5);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in;
+    font-family: 'Arial', sans-serif; /* Updated font family */
+}
+
+.dashboard-heading {
+    font-size: 2.5em; /* Adjusted size for prominence */
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    font-weight: 700; /* Bolder for emphasis */
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-welcome {
+    text-align: center;
+    font-size: 1.2em; /* Adjusted size */
+    color: #555;
+    margin-bottom: 10px;
+    font-weight: 400; /* Regular weight for clarity */
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.dashboard-tabs {
+    display: flex;
+    gap: 15px;
+}
+
+.dashboard-tab {
+    padding: 10px 20px;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    font-weight: 500;
+    font-size: 1em; /* Adjusted size */
+}
+
+.dashboard-tab.active {
+    background-color: #3f3d56;
+    transform: scale(1.1);
+}
+
+.dashboard-tab:hover {
+    background-color: #5a54f1;
+}
+
+.dashboard-logout {
+    background-color: #ff4757;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-logout:hover {
+    background-color: #e8434c;
+}
+
+.dashboard-logout svg {
+    margin-right: 10px;
+}
+
+.dashboard-tab-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.4s ease;
+}
+
+.dashboard-subheading {
+    font-size: 1.8em; /* Adjusted size */
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;400&display=swap');
+
+/* Form styles */
+.dashboard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increased gap for better spacing */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif; /* Updated font */
+}
+
+.dashboard-input,
+.dashboard-textarea,
+.dashboard-module-input,
+.dashboard-module-textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    transition: border 0.3s ease;
+    font-family: 'Roboto', sans-serif; /* Updated font */
+}
+
+.dashboard-input:focus,
+.dashboard-textarea:focus,
+.dashboard-module-input:focus,
+.dashboard-module-textarea:focus {
+    border-color: #6c63ff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(108, 99, 255, 0.2);
+}
+
+.dashboard-textarea,
+.dashboard-module-textarea {
+    height: 120px;
+    resize: none;
+    font-family: 'Roboto', sans-serif; /* Updated font */
+}
+
+.dashboard-module-heading {
+    margin-top: 20px;
+    font-size: 1.6em; /* Adjusted size */
+    font-weight: 600;
+    color: #444;
+    font-family: 'Poppins', sans-serif; /* Updated font for heading */
+}
+
+.dashboard-module-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+    font-family: 'Roboto', sans-serif; /* Updated font */
+}
+
+.dashboard-button-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.dashboard-add-button,
+.dashboard-submit-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif; /* Updated font for buttons */
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.dashboard-add-button svg,
+.dashboard-submit-button svg {
+    margin-right: 10px;
+}
+
+.dashboard-add-button:hover,
+.dashboard-submit-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.dashboard-submit-button {
+    background-color: #007bff;
+}
+
+.dashboard-submit-button:hover {
+    background-color: #0056b3;
+}
+
+.dashboard-course-list {
+    list-style-type: none;
+    padding: 0;
+    font-family: 'Roboto', sans-serif; /* Updated font */
+}
+
+.dashboard-course-item {
+    background-color: #f1f1f1;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 12px
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dashboard-button-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dashboard-tabs {
+        justify-content: center;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
