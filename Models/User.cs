@@ -21,6 +21,7 @@ namespace Kinstonplatform.Models
 
         public bool IsActive { get; set; } = true;
 
-       
+        
+        public bool IsEnabled { get; set; } = true; // Default value is true
     }
 }

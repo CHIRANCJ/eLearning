@@ -35,6 +35,7 @@ public class ProfessorsController : ControllerBase
         }
 
         professor.IsActive = true;
+        professor.IsEnabled = true; 
         _context.SaveChanges();
         return Ok();
     }

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaPlus, FaSignOutAlt } from 'react-icons/fa';
+import { FaPlus, FaSignOutAlt, FaFilePdf } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import './ProfessorDashboard.css'; // Ensure to import the new CSS file
 
 const ProfessorDashboard = () => {
     const username = localStorage.getItem('username');
     const userId = localStorage.getItem('userId');
-    // const email = localStorage.getItem('email');
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState('create');
@@ -71,18 +72,50 @@ const ProfessorDashboard = () => {
             }
         };
 
-        const fetchReviews = async () => {
+        const fetchCoursesByProfessor = async () => {
             try {
-                const reviewResponse = await axios.get(`http://localhost:5145/api/Reviews/professor/${userId}`);
-                setReviews(reviewResponse.data);
+                const response = await axios.get(`http://localhost:5145/api/Courses`);
+                // Filter the courses to only include those created by the logged-in professor
+                const professorCourses = response.data.filter(course => course.professorId === parseInt(userId));
+                setReviews(professorCourses); // Assuming 'reviews' is the state where you want to store the courses
             } catch (error) {
-                console.error('Error fetching reviews:', error);
+                console.error('Error fetching courses:', error);
             }
         };
+        
 
         fetchCourses();
-        fetchReviews();
+        fetchCoursesByProfessor();
     }, [userId]);
+
+    // Function to generate PDF
+   // Function to generate PDF
+const generatePdfReport = () => {
+    const doc = new jsPDF();
+    doc.text('Course Enrollment Report', 14, 16);
+    doc.setFontSize(12);
+
+    // Prepare the table data
+    const tableColumn = ['Course Title', 'Students Enrolled'];
+    const tableRows = reviews.map((review) => [
+        review.title, // Use the correct key for course title
+        review.enrollmentCount, // Use the correct key for student enrollment count
+    ]);
+
+    // Add the table to the PDF
+    if (tableRows.length > 0) {
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: 20,
+        });
+    } else {
+        doc.text('No course data available', 14, 30);
+    }
+
+    doc.save('CourseEnrollmentReport.pdf');
+};
+
 
     return (
         <div className="dashboard-container">
@@ -93,9 +126,9 @@ const ProfessorDashboard = () => {
                 <div className="dashboard-tabs">
                     <button onClick={() => setActiveTab('myCourses')} className={`dashboard-tab ${activeTab === 'myCourses' ? 'active' : ''}`}>Courses Created</button>
                     <button onClick={() => setActiveTab('create')} className={`dashboard-tab ${activeTab === 'create' ? 'active' : ''}`}>Add Course</button>
-                    <button onClick={() => setActiveTab('reviews')} className={`dashboard-tab ${activeTab === 'reviews' ? 'active' : ''}`}> Enrollment Status</button>
+                    <button onClick={() => setActiveTab('reviews')} className={`dashboard-tab ${activeTab === 'reviews' ? 'active' : ''}`}>Enrollment Status</button>
                 </div>
-                <button className="dashboard-logout" onClick={handleLogout}><FaSignOutAlt /> </button>
+                <button className="dashboard-logout" onClick={handleLogout}><FaSignOutAlt /></button>
             </div>
 
             {/* Create Course Tab */}
@@ -165,13 +198,12 @@ const ProfessorDashboard = () => {
                                         />
                                     </div>
                                 ))}
- <div className="dashboard-button-container">
-    <button type="button" onClick={handleAddModule} className="dashboard-add-button">
-        <FaPlus />Add More {/* Using the plus icon */}
-    </button>
-    <button type="submit" className="dashboard-submit-button">Publish Course</button>
-</div>
-
+                                <div className="dashboard-button-container">
+                                    <button type="button" onClick={handleAddModule} className="dashboard-add-button">
+                                        <FaPlus /> Add More
+                                    </button>
+                                    <button type="submit" className="dashboard-submit-button">Publish Course</button>
+                                </div>
                             </form>
                         </div>
                     ) : (
@@ -185,43 +217,47 @@ const ProfessorDashboard = () => {
             {/* My Courses Tab */}
             {activeTab === 'myCourses' && (
                 <div className="dashboard-tab-content">
-                    <h3 className="dashboard-subheading"> Live Courses</h3>
+                    <h3 className="dashboard-subheading">Live Courses</h3>
                     {courses.length > 0 ? (
                         <ul className="dashboard-course-list">
                             {courses.map((course) => (
                                 <li key={course.courseId} className="dashboard-course-item">
                                     <h4>{course.title}</h4>
                                     <p>{course.description}</p>
-                                    <p><strong>Start Date :</strong> {course.startDate}</p>
+                                    <p><strong>Start Date:</strong> {course.startDate}</p>
                                     <p><strong>End Date:</strong> {course.endDate}</p>
-                                    {/* <p><strong>Price:</strong> ${course.price}</p> */}
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p>No courses Available.</p>
+                        <p>No courses available.</p>
                     )}
                 </div>
             )}
 
             {/* Course Reviews Tab */}
-            {activeTab === 'reviews' && (
-                <div className="dashboard-tab-content">
-                    <h3 className="dashboard-subheading">Course Enrollments</h3>
-                    {reviews.length > 0 ? (
-                        <ul className="dashboard-course-list">
-                            {reviews.map((review) => (
-                                <li key={review.courseId} className="dashboard-course-item">
-                                    <h4>Course Title: {review.courseTitle}</h4>
-                                    <p>Students Enrolled: {review.studentCount}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No Enrollments yet.</p>
-                    )}
-                </div>
-            )}
+{activeTab === 'reviews' && (
+    <div className="dashboard-tab-content">
+        <h3 className="dashboard-subheading">Course Enrollments</h3>
+        {reviews.length > 0 ? (
+            <div>
+                <ul className="dashboard-course-list">
+                    {reviews.map((review) => (
+                        <li key={review.courseId} className="dashboard-course-item">
+                            <h4>Course Title: {review.title}</h4>
+                            <p>Students Enrolled: {review.enrollmentCount}</p>
+                        </li>
+                    ))}
+                </ul>
+                <button className="dashboard-download-button" onClick={generatePdfReport}>
+                    <FaFilePdf /> Download as PDF
+                </button>
+            </div>
+        ) : (
+            <p>No courses found.</p>
+        )}
+    </div>
+)}
         </div>
     );
 };

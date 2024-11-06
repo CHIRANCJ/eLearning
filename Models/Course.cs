@@ -5,8 +5,6 @@ namespace Kinstonplatform.Models
 {
     public class Course
     {
-        
-
         public int CourseId { get; set; }
 
         [Required]
@@ -28,6 +26,9 @@ namespace Kinstonplatform.Models
 
         public bool IsApproved { get; set; } = false; // Defaults to false for pending approval
         public int EnrollmentCount { get; set; } = 0; // Count of students enrolled
+
+        public bool Status { get; set; } = false; // New field for course status (active/inactive)
+
         [JsonIgnore]
         public List<Module> Modules { get; set; }
     }

@@ -16,7 +16,7 @@ namespace Kinstonplatform.Controllers
             _context = context;
         }
 
-        
+        // Get pending approvals for Professors and Students
         [HttpGet("pending-approvals")]
         public IActionResult GetPendingUsers()
         {
@@ -41,5 +41,47 @@ namespace Kinstonplatform.Controllers
 
             return Ok(approve ? "User approved." : "User rejected.");
         }
+
+        // Enable or disable user by ID
+        [HttpPut("toggle-user-status/{id}")]
+        public IActionResult ToggleUserStatus(int id, [FromQuery] bool enable)
+        {
+            var user = _context.Users.Find(id);
+
+            if (user == null)
+                return NotFound();
+
+            user.IsEnabled = enable;
+            _context.SaveChanges();
+
+            return Ok(enable ? "User enabled." : "User disabled.");
+        }
+        [HttpPut("toggle-course-status/{id}")]
+        public IActionResult ToggleCourseStatus(int id, [FromQuery] bool activated)
+        {
+            var course = _context.Courses.Find(id);
+
+            if (course == null)
+                return NotFound("Course not found.");
+
+            course.Status = activated; // Set the course status based on activation
+
+            _context.SaveChanges();
+
+            return Ok(activated ? "Course activated." : "Course deactivated."); // Update the response messages
+        }
+
+
+        [HttpGet("all-users")]
+        public IActionResult GetAllUsers()
+        {
+            // Fetch all users with roles 'Professor' or 'Student'
+            var allUsers = _context.Users
+                .Where(u => u.Role == "Professor" || u.Role == "Student")
+                .ToList();
+
+            return Ok(allUsers);
+        }
+
     }
 }

@@ -36,6 +36,7 @@ public class StudentsController : ControllerBase
         }
 
         student.IsActive = true;
+        student.IsEnabled = true;
         _context.SaveChanges();
         return Ok();
     }
@@ -58,8 +59,7 @@ public class StudentsController : ControllerBase
 
 
 
-    // Fetch student details by username
-    // Fetch student details by email instead of username
+    
     [HttpGet("details/{email}")]
     public IActionResult GetStudentDetails(string email)
     {

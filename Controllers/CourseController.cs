@@ -80,6 +80,7 @@ namespace Kinstonplatform.Controllers
                 return NotFound("Course not found.");
 
             course.IsApproved = true;
+            course.Status = false;
             _context.SaveChanges();
 
             return Ok("Course approved successfully.");

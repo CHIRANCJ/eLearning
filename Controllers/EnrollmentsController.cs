@@ -6,6 +6,7 @@ using Kinstonplatform.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Linq;
 
 namespace Kinstonplatform.Controllers
 {
@@ -52,22 +53,61 @@ namespace Kinstonplatform.Controllers
             return _context.Enrollments.Where(e => e.StudentId == studentId).ToList();
         }
 
-
-
-        [HttpPut("{enrollmentId}/rating")]
-        public IActionResult RateCourse(int enrollmentId, [FromBody] int? rating)
+        // New method to generate a PDF with course enrollment details
+        [HttpGet("{professorId}/course-enrollments/pdf")]
+        public IActionResult GenerateCourseEnrollmentPdf(int professorId)
         {
-            var enrollment = _context.Enrollments.Find(enrollmentId);
-            if (enrollment == null)
+            var courses = _context.Courses
+                .Where(c => c.ProfessorId == professorId)
+                .Select(c => new
+                {
+                    c.CourseId,
+                    c.Title,
+                    c.Description,
+                    c.StartDate,
+                    c.EndDate,
+                    c.Price,
+                    c.EnrollmentCount,
+                    c.IsApproved
+                })
+                .ToList();
+
+            if (!courses.Any())
             {
-                return NotFound();
+                return NotFound("No courses found for the professor.");
             }
 
-           
-            _context.SaveChanges();
-            return NoContent(); 
-        }
+            using (var memoryStream = new MemoryStream())
+            {
+                // Creating the PDF writer and document
+                var writer = new PdfWriter(memoryStream);
+                var pdf = new PdfDocument(writer);
+                var document = new Document(pdf);
 
-        
+                // Adding header
+                document.Add(new Paragraph("Course Enrollment Status")
+                    .SetFontSize(18)
+                    .SetBold());
+
+                // Adding course details
+                foreach (var course in courses)
+                {
+                    document.Add(new Paragraph($"Course Title: {course.Title}"));
+                    document.Add(new Paragraph($"Description: {course.Description}"));
+                    document.Add(new Paragraph($"Start Date: {course.StartDate.ToShortDateString()}"));
+                    document.Add(new Paragraph($"End Date: {course.EndDate.ToShortDateString()}"));
+                    document.Add(new Paragraph($"Price: ${course.Price}"));
+                    document.Add(new Paragraph($"Enrollment Count: {course.EnrollmentCount}"));
+                    document.Add(new Paragraph($"Approved: {(course.IsApproved ? "Yes" : "No")}\n"));
+                }
+
+                // Closing the document
+                document.Close();
+
+                // Returning the PDF file as a response
+                byte[] pdfBytes = memoryStream.ToArray();
+                return File(pdfBytes, "application/pdf", "CourseEnrollments.pdf");
+            }
+        }
     }
 }

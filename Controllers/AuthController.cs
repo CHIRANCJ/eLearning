@@ -41,8 +41,7 @@ namespace Kinstonplatform.Controllers
 
         private void NotifyAdmin(User user)
         {
-            // Logic to notify admin of new registration (e.g., via email or system notification)
-            // This can be extended to include email or real-time notifications.
+            
         }
 
         // Activate or reject user by Admin
@@ -76,7 +75,7 @@ namespace Kinstonplatform.Controllers
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
                 return Unauthorized("Invalid credentials.");
 
-            if (!user.IsActive)
+            if (!user.IsActive || !user.IsEnabled)
                 return Unauthorized("Your account is not approved yet.");
 
             // Generate JWT Token
